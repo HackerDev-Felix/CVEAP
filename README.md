@@ -15,5 +15,10 @@ keyword_list = ["免杀", "poc", "cve", "payload", "漏洞利用", "红队", "�
 ## 截圖
 ![](https://github.com/JustYoomoon/CVEAP/blob/main/2021-07-18_17-01.png)
 
+![](https://github.com/JustYoomoon/CVEAP/blob/main/photo_2021-07-18_17-17-16.jpg)
+
+## 開發者
+https://github.com/6613GitHub6613
+
 ## 鳴謝
 該項目受https://github.com/yhy0/github-cve-monitor 啓發，做了一點調整。
