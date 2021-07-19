@@ -90,7 +90,7 @@ def getNews(keyword_list, new_receive, url_list, description_list):
 def dingding(text, msg):
     # 将此处换为钉钉机器人的api
     webhook = 'xxxxx'
-    ding = cb.DingtalkChatbot(webhook, secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+    ding = cb.DingtalkChatbot(webhook)
     ding.send_text(msg='{}\r\n{}'.format(text, msg), is_at_all=False)
 
 
