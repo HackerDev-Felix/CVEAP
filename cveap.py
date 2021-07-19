@@ -4,6 +4,7 @@ import re
 import time
 import requests
 import datetime
+import dingtalkchatbot.chatbot as cb
 
 
 def mail(text, msg):
