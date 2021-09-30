@@ -85,7 +85,18 @@ def getNews(keyword_list, new_receive, url_list, description_list):
     except Exception as e:
         print(e, "github链接不通")
 
-
+# pushplus推送
+def pushplus(text, msg):
+    url = "https://pushplus.hxtrip.com/send"
+    data = {"token": "xxxxxxxxxxxx",#这里放pushplus的token
+            "title": text,
+            "content": msg,
+            "template": "html",
+            # 一对多推送的时候把下面一行注释去掉，填写好群组编码就可以了
+            # "topic": "xxxxxxx" # 这里放群组编码
+            }
+    requests.post(url=url, data=data)
+        
 # 钉钉
 def dingding(text, msg):
     # 将此处换为钉钉机器人的api
@@ -165,6 +176,7 @@ def sendNews(keyword_list, black_list):
                             # tgbot(text,msg)
                             # print(msg)
                             mail(text, msg)
+                            # pushplus(text, msg)
 
                             print("正在添加到黑名单：" + str(url_list[index]))
                             black_list.append(str(url_list[index]))
