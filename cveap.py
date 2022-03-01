@@ -4,7 +4,9 @@ import re
 import time
 import requests
 import datetime
-import dingtalkchatbot.chatbot as cb
+
+
+# import dingtalkchatbot.chatbot as cb
 
 
 def mail(text, msg):
@@ -61,12 +63,12 @@ def new_append(new_receive, req, url_list, description_list):
     s = re.findall('"total_count":*.{1,10}"incomplete_results"', req)
     print(s)
     s1 = str(s).replace(',"incomplete_results"\']', "").replace('[\'"total_count":', "")
-    
+
     description = re.findall('"description":*.{1,200}"fork"', req)[0].replace("\",\"fork\"", '').replace(
         "\"description\":\"", '')
     url = re.findall('"svn_url":*.{1,200}"homepage"', req)[0].replace("\",\"homepage\"", '').replace(
         "\"svn_url\":\"", '')
-    
+
     return new_receive.append(s1), url_list.append(url), description_list.append(description)
 
 
@@ -85,10 +87,11 @@ def getNews(keyword_list, new_receive, url_list, description_list):
     except Exception as e:
         print(e, "github链接不通")
 
+
 # pushplus推送
 def pushplus(text, msg):
     url = "https://pushplus.hxtrip.com/send"
-    data = {"token": "xxxxxxxxxxxx",#这里放pushplus的token
+    data = {"token": "xxxxxxxxxxxx",  # 这里放pushplus的token
             "title": text,
             "content": msg,
             "template": "html",
@@ -96,13 +99,31 @@ def pushplus(text, msg):
             # "topic": "xxxxxxx" # 这里放群组编码
             }
     requests.post(url=url, data=data)
-        
+
+
 # 钉钉
 def dingding(text, msg):
     # 将此处换为钉钉机器人的api
     webhook = 'xxxxx'
     ding = cb.DingtalkChatbot(webhook)
     ding.send_text(msg='{}\r\n{}'.format(text, msg), is_at_all=False)
+
+# 蓝信
+def lanxin(text, msg):
+    webhook = "https://apigw.lx.qianxin.com/v1/bot/hook/messages/create?hook_token=2285568-JPhxeSBgpkVjF7X0pvqtzEgp*******************************fGDz5LiRO2WM"
+    lanxinSendData = {
+        "msgType": "text",
+        "msgData": {
+            "text": {
+                "content": text + "\r\n" + msg,
+                "reminder": {
+                    "all": False,
+                }
+            }
+        }
+    }
+    lanxinSend = requests.post(url=webhook, data=lanxinSendData, verify=False)
+    print(lanxinSend.text)
 
 
 # server酱  http://sc.ftqq.com/?c=code
@@ -125,7 +146,7 @@ def tgbot(text, msg):
 def regular(req_list):
     for req in req_list:
         name = re.findall('"name":*.{1,200}"full_name"', req)[0].replace("\"name\":\"", '').replace("\",\"full_name\"",
-                                                                                                        '')
+                                                                                                    '')
         description = re.findall('"description":*.{1,200}"fork"', req)[0].replace("\",\"fork\"", '').replace(
             "\"description\":\"", '')
 
@@ -135,7 +156,6 @@ def regular(req_list):
 
 
 def sendNews(keyword_list, black_list):
-
     print("初始化数据中！！！")
     receive = []
 
@@ -169,11 +189,13 @@ def sendNews(keyword_list, black_list):
                         if str(url_list[index]) in black_list:
                             print(str(url_list[index]) + " 已经存在于黑名单中")
                         else:
-                            msg ='\n更新了：' + str(keyword_list[index]) + '\n描述：' + str(description_list[index]) + '\nURL：' + str(url_list[index])
+                            msg = '\n更新了：' + str(keyword_list[index]) + '\n描述：' + str(
+                                description_list[index]) + '\nURL：' + str(url_list[index])
                             # 三选一即可，没配置的 注释或者删掉
                             # server(text, msg)
                             # dingding(text, msg)
                             # tgbot(text,msg)
+                            lanxin(text, msg)
                             # print(msg)
                             mail(text, msg)
                             # pushplus(text, msg)
@@ -196,4 +218,3 @@ if __name__ == '__main__':
                     "主机安全", "信息收集", "溯源"]
     black_list = []
     sendNews(keyword_list, black_list)
-
